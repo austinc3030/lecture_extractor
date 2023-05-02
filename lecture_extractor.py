@@ -10,6 +10,7 @@ import shutil
 import functools
 import imagehash
 import numpy as np
+import speech_recognition as sr
 
 # Filename
 input_filename = "sample.wmv"
