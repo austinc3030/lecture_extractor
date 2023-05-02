@@ -31,6 +31,11 @@ if __name__ == '__main__':
         os.mkdir("extraction")
     else:
         sys.exit("extraction already exists, exiting.")
+    
+    if not os.path.exists("deduplicated"):
+        os.mkdir("deduplicated")
+    else:
+        sys.exit("deduplicated already exists, exiting.")
 
     ffmpeg_cmd = ["ffmpeg",
                   "-v", "quiet", "-stats",
@@ -48,7 +53,7 @@ if __name__ == '__main__':
             else:
                 print("Found unique image: {file}".format(file=filelist[ii]))
                 head, tail = os.path.split(filelist[ii])
-                shutil.copyfile(filelist[ii], sys.argv[2] + os.path.sep + tail)
+                shutil.copyfile(filelist[ii], "deduplicated" + os.path.sep + tail)
         else:
-            shutil.copyfile(filelist[ii], sys.argv[2] + os.path.sep + tail)
+            shutil.copyfile(filelist[ii], "deduplicated" + os.path.sep + tail)
     shutil.rmtree("extraction")
