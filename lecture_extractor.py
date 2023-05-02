@@ -26,10 +26,9 @@ def compare(image1=None, image2=None, similarity=80):
     hash1 = imagehash.average_hash(image1, hash_size).hash
     hash2 = imagehash.average_hash(image2, hash_size).hash
 
-    if np.count_nonzero(hash1 != hash2) <= diff_limit:
-        return 0
-    else:
-        return 1
+    difference = hash1 != hash2
+
+    return difference
 
 
 def deduplicate(location, similarity=80):
@@ -41,10 +40,12 @@ def deduplicate(location, similarity=80):
             image1 = Image.open(filelist[ii])
             image2 = Image.open(filelist[ii+1])
 
-            if compare(image1, image2) != 0:
-                #head, tail = os.path.split(filelist[ii])
-                #shutil.copyfile(filelist[ii], location + os.path.sep + tail)
-                count += 1
+            print("Difference: {}".format(compare(image1=image1, image2=image2, similarity=80))
+
+            # if compare(image1, image2) != 0:
+            #     #head, tail = os.path.split(filelist[ii])
+            #     #shutil.copyfile(filelist[ii], location + os.path.sep + tail)
+            #     count += 1
         else:
             #shutil.copyfile(filelist[ii], location + os.path.sep + tail)
             count += 1
@@ -71,7 +72,9 @@ if __name__ == '__main__':
                   "extraction/{input_filename}_%010d.png".format(input_filename=input_filename)]
     subprocess.call(ffmpeg_cmd)
 
-    location = "deduplicated"
-    for i in range(1, 99):
-        count = deduplicate(location=location, similarity=i)
-        print("With similarity={similarity}, found {count} slides.".format(similarity=i, count=count))
+    count = deduplicate(location=location, similarity=80)
+
+    # location = "deduplicated"
+    # for i in range(1, 99):
+    #     count = deduplicate(location=location, similarity=i)
+    #     print("With similarity={similarity}, found {count} slides.".format(similarity=i, count=count))
