@@ -62,7 +62,7 @@ def deduplicate(location, similarity=80, method=1):
                 shutil.copyfile(filelist[ii], location + os.path.sep + tail)
         else:
             shutil.copyfile(filelist[ii], location + os.path.sep + tail)
-    shutil.rmtree("extraction")
+    #shutil.rmtree("extraction")
 
 
 if __name__ == '__main__':
@@ -71,10 +71,15 @@ if __name__ == '__main__':
     else:
         sys.exit("extraction already exists, exiting.")
     
-    if not os.path.exists("deduplicated"):
-        os.mkdir("deduplicated")
+    if not os.path.exists("deduplicated1"):
+        os.mkdir("deduplicated1")
     else:
-        sys.exit("deduplicated already exists, exiting.")
+        sys.exit("deduplicated1 already exists, exiting.")
+
+    if not os.path.exists("deduplicated2"):
+        os.mkdir("deduplicated2")
+    else:
+        sys.exit("deduplicated2 already exists, exiting.")
 
     ffmpeg_cmd = ["ffmpeg",
                   "-v", "quiet", "-stats",
@@ -83,5 +88,7 @@ if __name__ == '__main__':
                   "extraction/{input_filename}_%010d.png".format(input_filename=input_filename)]
     subprocess.call(ffmpeg_cmd)
 
-    location = "deduplicated"
-    deduplicate(location, similarity=80, 1)
+    location1 = "deduplicated1"
+    location2 = "deduplicated2"
+    deduplicate(location=location1, similarity=80, method=1)
+    deduplicate(location=location2, similarity=80, method=2)
