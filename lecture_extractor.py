@@ -7,6 +7,7 @@ import os
 import glob
 import subprocess
 import shutil
+import functools
 
 # Filename
 input_filename = "sample.wmv"
@@ -20,14 +21,14 @@ def compare(file1, file2):
     image2 = Image.open(file2)
     h1 = image1.histogram()
     h2 = image2.histogram()
-    rms = math.sqrt(reduce(operator.add,
-                           map(lambda a,b: (a-b)**2, h1, h2))/len(h1))
+    rms = math.sqrt(functools.reduce(operator.add,
+                                     map(lambda a,b: (a-b)**2, h1, h2))/len(h1))
     return rms
 
 
 if __name__ == '__main__':
     if not os.path.exists("extraction"):
-        Os.mkdir("extraction")
+        os.mkdir("extraction")
     else:
         sys.exit("extraction already exists, exiting.")
 
