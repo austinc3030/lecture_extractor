@@ -108,9 +108,10 @@ if __name__ == '__main__':
 
         for i in range(0, duration_whole_second):
             output_filename = "extracted/{filename}_{index}.png".format(filename=filename, index=i)
-            ffmpeg.input(filename, ss=i).output(output_filename, vframes=1, loglevel="quiet", stats=True).run()
+            ffmpeg.input(filename, ss=i).output(output_filename, vframes=1, loglevel="quiet").run()
             frames.append(new_frame_dict(frame_index=i, frame_timestamp=i, frame_filename=output_filename))
 
+        print(frames)
         # ffmpeg_cmd = ["ffmpeg",
         #               "-v", "quiet", "-stats",
         #               "-i", input_filename,
@@ -119,18 +120,18 @@ if __name__ == '__main__':
         #               "extraction/{input_filename}_%010d.png".format(input_filename=input_filename)]
         # subprocess.call(ffmpeg_cmd)
         
-    if not os.path.exists("deduplicated"):
-        os.mkdir("deduplicated")
-        location = "deduplicated"
-        number_of_slides = deduplicate(location=location, threshold=threshold)
+    # if not os.path.exists("deduplicated"):
+    #     os.mkdir("deduplicated")
+    #     location = "deduplicated"
+    #     number_of_slides = deduplicate(location=location, threshold=threshold)
 
-        print("Found {number_of_slides} slide(s)".format(number_of_slides=number_of_slides))
+    #     print("Found {number_of_slides} slide(s)".format(number_of_slides=number_of_slides))
 
-    ffmpeg_cmd = ["ffmpeg",
-                  "-v", "quiet", "-stats",
-                  "-i", input_filename,
-                  "extraction/{input_filename}_audio.wav".format(input_filename=input_filename)]
-    subprocess.call(ffmpeg_cmd)
+    # ffmpeg_cmd = ["ffmpeg",
+    #               "-v", "quiet", "-stats",
+    #               "-i", input_filename,
+    #               "extraction/{input_filename}_audio.wav".format(input_filename=input_filename)]
+    # subprocess.call(ffmpeg_cmd)
 
     # #reading from audio mp3 file
     # sound = AudioSegment.from_wav("extraction/{input_filename}_audio.wav".format(input_filename=input_filename), format="wav")
