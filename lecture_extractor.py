@@ -88,7 +88,7 @@ if __name__ == '__main__':
                   "extraction/{input_filename}_%010d.png".format(input_filename=input_filename)]
     subprocess.call(ffmpeg_cmd)
 
-    location1 = "deduplicated1"
+    #location1 = "deduplicated1"
     location2 = "deduplicated2"
-    deduplicate(location=location1, similarity=80, method=1)
-    deduplicate(location=location2, similarity=80, method=2)
+    #deduplicate(location=location1, similarity=80, method=1)
+    deduplicate(location=location2, similarity=50, method=2)
