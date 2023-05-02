@@ -54,15 +54,15 @@ def deduplicate(location, similarity=80):
 
 
 if __name__ == '__main__':
-    # if not os.path.exists("extraction"):
-    #     os.mkdir("extraction")
-    # else:
-    #     sys.exit("extraction already exists, exiting.")
+    if not os.path.exists("extraction"):
+        os.mkdir("extraction")
+    else:
+        sys.exit("extraction already exists, exiting.")
     
-    # if not os.path.exists("deduplicated"):
-    #     os.mkdir("deduplicated")
-    # else:
-    #     sys.exit("deduplicated already exists, exiting.")
+    if not os.path.exists("deduplicated"):
+        os.mkdir("deduplicated")
+    else:
+        sys.exit("deduplicated already exists, exiting.")
 
     ffmpeg_cmd = ["ffmpeg",
                   "-v", "quiet", "-stats",
