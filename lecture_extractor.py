@@ -40,7 +40,7 @@ def deduplicate(location, similarity=80):
             image1 = Image.open(filelist[ii])
             image2 = Image.open(filelist[ii+1])
 
-            print("Difference: {}".format(compare(image1=image1, image2=image2, similarity=80))
+            print("Difference: {}".format(compare(image1=image1, image2=image2, similarity=80)))
 
             # if compare(image1, image2) != 0:
             #     #head, tail = os.path.split(filelist[ii])
@@ -71,10 +71,10 @@ if __name__ == '__main__':
                   "-vf", "fps={sampling_rate}".format(sampling_rate=sampling_rate),
                   "extraction/{input_filename}_%010d.png".format(input_filename=input_filename)]
     subprocess.call(ffmpeg_cmd)
+    location = "deduplicated"
 
     count = deduplicate(location=location, similarity=80)
 
-    # location = "deduplicated"
     # for i in range(1, 99):
     #     count = deduplicate(location=location, similarity=i)
     #     print("With similarity={similarity}, found {count} slides.".format(similarity=i, count=count))
