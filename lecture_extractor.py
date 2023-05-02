@@ -64,10 +64,10 @@ if __name__ == '__main__':
     if not os.path.exists("extraction"):
         os.mkdir("extraction")
         ffmpeg_cmd = ["ffmpeg",
-                    "-v", "quiet", "-stats",
-                    "-i", input_filename,
-                    "-vf", "fps={sampling_rate}".format(sampling_rate=sampling_rate),
-                    "extraction/{input_filename}_%010d.png".format(input_filename=input_filename)]
+                      "-v", "quiet", "-stats",
+                      "-i", input_filename,
+                      "-vf", "fps={sampling_rate}".format(sampling_rate=sampling_rate),
+                      "extraction/{input_filename}_%010d.png".format(input_filename=input_filename)]
         subprocess.call(ffmpeg_cmd)
         
     if not os.path.exists("deduplicated"):
@@ -76,3 +76,25 @@ if __name__ == '__main__':
         number_of_slides = deduplicate(location=location, threshold=threshold)
 
         print("Found {number_of_slides} slide(s)".format(number_of_slides=number_of_slides))
+
+    ffmpeg_cmd = ["ffmpeg",
+                  "-v", "quiet", "-stats",
+                  "-i", input_filename,
+                  "{input_filename}_audio.wav".format(input_filename=input_filename)]
+    subprocess.call(ffmpeg_cmd)
+    
+    #AUDIO_FILE = path.join(path.dirname(path.realpath(__file__)), "english.wav")
+    AUDIO_FILE = "{input_filename}_audio.wav".format(input_filename=input_filename)
+
+    # use the audio file as the audio source
+    r = sr.Recognizer()
+    with sr.AudioFile(AUDIO_FILE) as source:
+        audio = r.record(source) 
+        
+    try:
+        print("Google Speech Recognition results:")
+        print(r.recognize_google(audio, show_all=True))
+    except sr.UnknownValueError:
+        print("Google Speech Recognition could not understand audio")
+    except sr.RequestError as e:
+        print("Could not request results from Google Speech Recognition service; {0}".format(e))
