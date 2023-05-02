@@ -53,7 +53,6 @@ def deduplicate(location, threshold=5):
         else:
             shutil.copyfile(filelist[ii], location + os.path.sep + tail)
             count += 1
-    shutil.rmtree("extraction")
 
     return count
 
@@ -80,21 +79,24 @@ if __name__ == '__main__':
     ffmpeg_cmd = ["ffmpeg",
                   "-v", "quiet", "-stats",
                   "-i", input_filename,
-                  "{input_filename}_audio.wav".format(input_filename=input_filename)]
+                  "-f", "segment", "-segment_time 30"
+                  "extraction/{input_filename}_audio%010d.wav".format(input_filename=input_filename)]
     subprocess.call(ffmpeg_cmd)
-    
-    #AUDIO_FILE = path.join(path.dirname(path.realpath(__file__)), "english.wav")
-    AUDIO_FILE = "{input_filename}_audio.wav".format(input_filename=input_filename)
 
-    # use the audio file as the audio source
-    r = sr.Recognizer()
-    with sr.AudioFile(AUDIO_FILE) as source:
-        audio = r.record(source) 
+    # #AUDIO_FILE = path.join(path.dirname(path.realpath(__file__)), "english.wav")
+    # AUDIO_FILE = "{input_filename}_audio.wav".format(input_filename=input_filename)
+
+    # # use the audio file as the audio source
+    # r = sr.Recognizer()
+    # with sr.AudioFile(AUDIO_FILE) as source:
+    #     audio = r.record(source) 
         
-    try:
-        print("Google Speech Recognition results:")
-        print(r.recognize_google(audio, show_all=True))
-    except sr.UnknownValueError:
-        print("Google Speech Recognition could not understand audio")
-    except sr.RequestError as e:
-        print("Could not request results from Google Speech Recognition service; {0}".format(e))
+    # try:
+    #     print("Google Speech Recognition results:")
+    #     print(r.recognize_google(audio, show_all=True))
+    # except sr.UnknownValueError:
+    #     print("Google Speech Recognition could not understand audio")
+    # except sr.RequestError as e:
+    #     print("Could not request results from Google Speech Recognition service; {0}".format(e))
+
+    #shutil.rmtree("extraction")
