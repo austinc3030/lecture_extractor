@@ -41,10 +41,7 @@ def deduplicate(location, similarity=80):
             image1 = Image.open(filelist[ii])
             image2 = Image.open(filelist[ii+1])
 
-            if compare(image1, image2) == 0:
-                print("Found similar images: {file1} and {file2}".format(file1=filelist[ii], file2=filelist[ii+1]))
-            else:
-                print("Found unique image: {file}".format(file=filelist[ii]))
+            if compare(image1, image2) != 0:
                 head, tail = os.path.split(filelist[ii])
                 shutil.copyfile(filelist[ii], location + os.path.sep + tail)
                 count += 1
