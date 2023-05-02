@@ -1,6 +1,7 @@
 #!/bin/python3
 
 import ffmpeg
+import subprocess
 
 # Filename
 input_filename = "sample.wmv"
@@ -9,7 +10,11 @@ input_filename = "sample.wmv"
 video_sampling_rate = 1
 
 if __name__ == '__main__':
-    stream = ffmpeg.input(input_filename)
-    stream = ffmpeg.filter(stream, 'fps', fps=1)
-    stream = ffmpeg.filter_multi_output(stream, "{input_filename}_%010d.png".format(input_filename=input_filename))
-    ffmpeg.run(steam)
+    cmd = ["ffmpeg", "-i", input_filename, "-vf", "fps=1", "$filename%010d.png"]
+    subprocess.call(cmd)
+    
+    
+    #stream = ffmpeg.input(input_filename)
+    #stream = ffmpeg.filter(stream, 'fps', fps=1)
+    #stream = ffmpeg.filter_multi_output(stream, "{input_filename}_%010d.png".format(input_filename=input_filename))
+    #ffmpeg.run(steam)
