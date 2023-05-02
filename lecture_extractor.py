@@ -17,6 +17,10 @@ input_filename = "sample.wmv"
 # Number of frames per second to extract from video. Note: A high sample rate here likely isn't needed for a slide show
 sampling_rate = 1
 
+# Threshold: The number of bits that are allowed to differ between image hashes for determining similarity.
+# A value of 5 seem to be effective to prevent duplicate slides due to cursor movements. Can adjust as needed
+threshold = 5
+
 
 def compare(image1=None, image2=None, similarity=80):
     threshold = 1 - similarity/100
@@ -31,7 +35,7 @@ def compare(image1=None, image2=None, similarity=80):
     return difference
 
 
-def deduplicate(location, similarity=80):
+def deduplicate(location, threshold=5):
     filelist = glob.glob(os.path.join("extraction", '*.png'))
     filelist.sort()
     count = 0
@@ -41,15 +45,14 @@ def deduplicate(location, similarity=80):
             image2 = Image.open(filelist[ii+1])
 
             difference = compare(image1, image2)
-            if difference != 0:
-                print("Image1: {image1} Image2: {image2} Difference: {difference}".format(image1=filelist[ii], image2=filelist[ii+1], difference=difference))
+            if difference > 5:
                 head, tail = os.path.split(filelist[ii])
                 shutil.copyfile(filelist[ii], location + os.path.sep + tail)
                 count += 1
         else:
             shutil.copyfile(filelist[ii], location + os.path.sep + tail)
             count += 1
-    #shutil.rmtree("extraction")
+    shutil.rmtree("extraction")
 
     return count
 
@@ -68,4 +71,4 @@ if __name__ == '__main__':
     if not os.path.exists("deduplicated"):
         os.mkdir("deduplicated")
         location = "deduplicated"
-        print(deduplicate(location=location, similarity=80))
+        print(deduplicate(location=location, threshold=threshold))
