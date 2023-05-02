@@ -26,6 +26,11 @@ def compare(file1, file2):
 
 
 if __name__ == '__main__':
+    if not os.path.exists("extraction"):
+        Os.mkdir("extraction")
+    else:
+        sys.exit("extraction already exists, exiting.")
+
     ffmpeg_cmd = ["ffmpeg",
                   "-v", "quiet", "-stats",
                   "-i", input_filename,
