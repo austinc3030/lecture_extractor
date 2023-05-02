@@ -38,9 +38,9 @@ if __name__ == '__main__':
     for ii in range(0, len(filelist)):
         if ii < len(filelist)-1:
             if compare(filelist[ii], filelist[ii+1]) == 0:
-                print 'Found similar images: ' + filelist[ii] + " and " + filelist[ii+1]
+                print("Found similar images: {file1} and {file2}".format(file1=filelist[ii], file2=filelist[ii+1]))
             else:
-                print 'Found unique image: ' + filelist[ii]
+                print("Found unique image: {file}".format(file=filelist[ii]))
                 head, tail = os.path.split(filelist[ii])
                 shutil.copyfile(filelist[ii], sys.argv[2] + os.path.sep + tail)
         else:
