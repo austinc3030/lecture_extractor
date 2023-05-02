@@ -35,6 +35,7 @@ def compare(image1=None, image2=None, similarity=80):
 def deduplicate(location, similarity=80):
     filelist = glob.glob(os.path.join("extraction", '*.png'))
     filelist.sort()
+    count = 0
     for ii in range(0, len(filelist)):
         if ii < len(filelist)-1:
             image1 = Image.open(filelist[ii])
@@ -46,9 +47,13 @@ def deduplicate(location, similarity=80):
                 print("Found unique image: {file}".format(file=filelist[ii]))
                 head, tail = os.path.split(filelist[ii])
                 shutil.copyfile(filelist[ii], location + os.path.sep + tail)
+                count += 1
         else:
             shutil.copyfile(filelist[ii], location + os.path.sep + tail)
+            count += 1
     shutil.rmtree("extraction")
+
+    return count
 
 
 if __name__ == '__main__':
@@ -70,4 +75,6 @@ if __name__ == '__main__':
     subprocess.call(ffmpeg_cmd)
 
     location = "deduplicated"
-    deduplicate(location=location, similarity=50)
+    count = deduplicate(location=location, similarity=50)
+
+    print("Found {count} slides.".format(count=count))
