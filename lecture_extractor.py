@@ -59,6 +59,7 @@ def deduplicate(location, threshold=5):
 
 if __name__ == '__main__':
 
+    # TODO: Do not rely on dirs existing to determine whether to do something. Eventually implement in argparse
     if not os.path.exists("extraction"):
         os.mkdir("extraction")
         ffmpeg_cmd = ["ffmpeg",
@@ -71,4 +72,6 @@ if __name__ == '__main__':
     if not os.path.exists("deduplicated"):
         os.mkdir("deduplicated")
         location = "deduplicated"
-        print(deduplicate(location=location, threshold=threshold))
+        number_of_slides = deduplicate(location=location, threshold=threshold)
+
+        print("Found {number_of_slides} slide(s)".format(number_of_slides=number_of_slides))
