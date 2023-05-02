@@ -22,6 +22,9 @@ sampling_rate = 1
 # A value of 5 seem to be effective to prevent duplicate slides due to cursor movements. Can adjust as needed
 threshold = 5
 
+# Number of seconds to chunk the audio into. Google speech to text only accepts 60 seconds at a time
+audio_chunk_seconds = 30
+
 
 def compare(image1=None, image2=None, similarity=80):
     threshold = 1 - similarity/100
@@ -57,6 +60,30 @@ def deduplicate(location, threshold=5):
     return count
 
 
+def transcribe_audio():
+
+    filelist = glob.glob(os.path.join("extraction", '*.wav'))
+    filelist.sort()
+
+    for ii in range(0, len(filelist)):
+        if ii < len(filelist)-1:
+            #AUDIO_FILE = path.join(path.dirname(path.realpath(__file__)), "english.wav")
+
+            # use the audio file as the audio source
+            r = sr.Recognizer()
+            with sr.AudioFile("{input_filename}".format(input_filename=filelist[ii])) as source:
+                audio = r.record(source) 
+                
+            try:
+                print("Google Speech Recognition results for file {}:".format(filelist[ii]))
+                print(r.recognize_google(audio, show_all=True))
+            except sr.UnknownValueError:
+                print("Google Speech Recognition could not understand audio")
+            except sr.RequestError as e:
+                print("Could not request results from Google Speech Recognition service; {0}".format(e))
+
+
+
 if __name__ == '__main__':
 
     # TODO: Do not rely on dirs existing to determine whether to do something. Eventually implement in argparse
@@ -79,24 +106,9 @@ if __name__ == '__main__':
     ffmpeg_cmd = ["ffmpeg",
                   "-v", "quiet", "-stats",
                   "-i", input_filename,
-                  "-f", "segment", "-segment_time 30"
+                  "-f", "segment", "-segment_time", "30",
                   "extraction/{input_filename}_audio%010d.wav".format(input_filename=input_filename)]
     subprocess.call(ffmpeg_cmd)
 
-    # #AUDIO_FILE = path.join(path.dirname(path.realpath(__file__)), "english.wav")
-    # AUDIO_FILE = "{input_filename}_audio.wav".format(input_filename=input_filename)
-
-    # # use the audio file as the audio source
-    # r = sr.Recognizer()
-    # with sr.AudioFile(AUDIO_FILE) as source:
-    #     audio = r.record(source) 
-        
-    # try:
-    #     print("Google Speech Recognition results:")
-    #     print(r.recognize_google(audio, show_all=True))
-    # except sr.UnknownValueError:
-    #     print("Google Speech Recognition could not understand audio")
-    # except sr.RequestError as e:
-    #     print("Could not request results from Google Speech Recognition service; {0}".format(e))
-
+    transcribe_audio()
     #shutil.rmtree("extraction")
