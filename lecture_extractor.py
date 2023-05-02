@@ -78,7 +78,7 @@ def transcribe_audio():
                 
             try:
                 print("Google Speech Recognition results for file {}:".format(filelist[ii]))
-                print(r.recognize_google(audio, show_all=True))
+                print(r.recognize_google(audio))
             except sr.UnknownValueError:
                 print("Google Speech Recognition could not understand audio")
             except sr.RequestError as e:
@@ -117,7 +117,7 @@ if __name__ == '__main__':
     audio_chunks = split_on_silence(sound, min_silence_len=500, silence_thresh=-40, keep_silence=250 )
     #loop is used to iterate over the output list
     for i, chunk in enumerate(audio_chunks):
-        output_file = "extracted/audio_chunk{0}.mp3".format(i)
+        output_file = "extracted/audio_chunk{0}.wav".format(i)
         print("Exporting file", output_file)
         chunk.export(output_file, format="wav")
 

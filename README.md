@@ -11,4 +11,5 @@ https://medium.com/@somilshah112/how-to-find-duplicate-or-similar-images-quickly
 https://www.aboehler.at/doku/doku.php/blog:2012:0801_extracting_lecture_slides_from_video
 - Did not use the image comparison in this link. Generated too many false positives/duplicate slides.
 
-https://becominghuman.ai/how-to-generate-text-from-a-video-file-using-python-261f59e95b5f
+https://www.codespeedy.com/split-audio-files-using-silence-detection-in-python/
+- Split audio file based on silence for transcription
