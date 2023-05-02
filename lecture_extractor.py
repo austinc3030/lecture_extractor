@@ -1,4 +1,3 @@
-austinc3030@lecture-extractor:~/lecture_extractor$ cat lecture_extractor.py 
 #!/bin/python3
 
 import math, operator
@@ -43,6 +42,7 @@ def deduplicate(location, similarity=80):
 
             difference = compare(image1, image2)
             if difference != 0:
+                print("Image1: {image1} Image2: {image2} Difference: {difference}".format(image1=filelist[ii], image2=filelist[ii+1], difference=difference))
                 head, tail = os.path.split(filelist[ii])
                 shutil.copyfile(filelist[ii], location + os.path.sep + tail)
                 count += 1
