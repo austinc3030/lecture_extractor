@@ -42,27 +42,27 @@ def deduplicate(location, similarity=80):
             image2 = Image.open(filelist[ii+1])
 
             if compare(image1, image2) != 0:
-                head, tail = os.path.split(filelist[ii])
-                shutil.copyfile(filelist[ii], location + os.path.sep + tail)
+                #head, tail = os.path.split(filelist[ii])
+                #shutil.copyfile(filelist[ii], location + os.path.sep + tail)
                 count += 1
         else:
-            shutil.copyfile(filelist[ii], location + os.path.sep + tail)
+            #shutil.copyfile(filelist[ii], location + os.path.sep + tail)
             count += 1
-    shutil.rmtree("extraction")
+    #shutil.rmtree("extraction")
 
     return count
 
 
 if __name__ == '__main__':
-    if not os.path.exists("extraction"):
-        os.mkdir("extraction")
-    else:
-        sys.exit("extraction already exists, exiting.")
+    # if not os.path.exists("extraction"):
+    #     os.mkdir("extraction")
+    # else:
+    #     sys.exit("extraction already exists, exiting.")
     
-    if not os.path.exists("deduplicated"):
-        os.mkdir("deduplicated")
-    else:
-        sys.exit("deduplicated already exists, exiting.")
+    # if not os.path.exists("deduplicated"):
+    #     os.mkdir("deduplicated")
+    # else:
+    #     sys.exit("deduplicated already exists, exiting.")
 
     ffmpeg_cmd = ["ffmpeg",
                   "-v", "quiet", "-stats",
@@ -72,6 +72,6 @@ if __name__ == '__main__':
     subprocess.call(ffmpeg_cmd)
 
     location = "deduplicated"
-    count = deduplicate(location=location, similarity=50)
-
-    print("Found {count} slides.".format(count=count))
+    for i in range(1, 99):
+        count = deduplicate(location=location, similarity=i)
+        print("With similarity={similarity}, found {count} slides.".format(similarity=i, count=count))
