@@ -11,6 +11,8 @@ import functools
 import imagehash
 import numpy as np
 import speech_recognition as sr
+from pydub import AudioSegment
+from pydub.silence import split_on_silence
 
 # Filename
 input_filename = "sample.wmv"
@@ -106,9 +108,18 @@ if __name__ == '__main__':
     ffmpeg_cmd = ["ffmpeg",
                   "-v", "quiet", "-stats",
                   "-i", input_filename,
-                  "-f", "segment", "-segment_time", "30",
-                  "extraction/{input_filename}_audio%010d.wav".format(input_filename=input_filename)]
+                  "extraction/{input_filename}_audio.wav".format(input_filename=input_filename)]
     subprocess.call(ffmpeg_cmd)
+
+    #reading from audio mp3 file
+    sound = AudioSegment.from_wav("extraction/{input_filename}_audio.wav".format(input_filename=input_filename), format="wav")
+    # spliting audio files
+    audio_chunks = split_on_silence(sound, min_silence_len=500, silence_thresh=-40, keep_silence=250 )
+    #loop is used to iterate over the output list
+    for i, chunk in enumerate(audio_chunks):
+        output_file = "extracted/audio_chunk{0}.mp3".format(i)
+        print("Exporting file", output_file)
+        chunk.export(output_file, format="wav")
 
     transcribe_audio()
     #shutil.rmtree("extraction")
