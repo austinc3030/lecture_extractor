@@ -11,5 +11,5 @@ video_sampling_rate = 1
 if __name__ == '__main__':
     stream = ffmpeg.input(input_filename)
     stream = ffmpeg.filter(stream, 'fps', fps=1)
-    stream = ffmpeg.filter_multi_output("{input_filename}_%010d.png".format(input_filename=input_filename))
+    stream = ffmpeg.filter_multi_output(stream, "{input_filename}_%010d.png".format(input_filename=input_filename))
     ffmpeg.run(steam)
