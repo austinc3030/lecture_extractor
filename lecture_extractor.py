@@ -10,9 +10,6 @@ import shutil
 import functools
 import imagehash
 import numpy as np
-import speech_recognition as sr
-from pydub import AudioSegment
-from pydub.silence import split_on_silence
 import ffmpeg
 
 # Filename
@@ -63,29 +60,6 @@ def deduplicate(location, threshold=5):
     return count
 
 
-# def transcribe_audio():
-
-#     filelist = glob.glob(os.path.join("extraction", '*.wav'))
-#     filelist.sort()
-
-#     for ii in range(0, len(filelist)):
-#         if ii < len(filelist)-1:
-#             #AUDIO_FILE = path.join(path.dirname(path.realpath(__file__)), "english.wav")
-
-#             # use the audio file as the audio source
-#             r = sr.Recognizer()
-#             with sr.AudioFile("{input_filename}".format(input_filename=filelist[ii])) as source:
-#                 audio = r.record(source) 
-                
-#             try:
-#                 print("Google Speech Recognition results for file {}:".format(filelist[ii]))
-#                 print(r.recognize_google(audio))
-#             except sr.UnknownValueError:
-#                 print("Google Speech Recognition could not understand audio")
-#             except sr.RequestError as e:
-#                 print("Could not request results from Google Speech Recognition service; {0}".format(e))
-
-
 def new_frame_dict(frame_index=0, frame_timestamp=0, frame_filename=""):
     
     return {"frame_index": frame_index,
@@ -112,36 +86,5 @@ if __name__ == '__main__':
             frames.append(new_frame_dict(frame_index=i, frame_timestamp=i, frame_filename=output_filename))
 
         print(frames)
-        # ffmpeg_cmd = ["ffmpeg",
-        #               "-v", "quiet", "-stats",
-        #               "-i", input_filename,
-        #               "-vf", "fps={sampling_rate}".format(sampling_rate=sampling_rate),
-        #               "showinfo"
-        #               "extraction/{input_filename}_%010d.png".format(input_filename=input_filename)]
-        # subprocess.call(ffmpeg_cmd)
-        
-    # if not os.path.exists("deduplicated"):
-    #     os.mkdir("deduplicated")
-    #     location = "deduplicated"
-    #     number_of_slides = deduplicate(location=location, threshold=threshold)
 
-    #     print("Found {number_of_slides} slide(s)".format(number_of_slides=number_of_slides))
-
-    # ffmpeg_cmd = ["ffmpeg",
-    #               "-v", "quiet", "-stats",
-    #               "-i", input_filename,
-    #               "extraction/{input_filename}_audio.wav".format(input_filename=input_filename)]
-    # subprocess.call(ffmpeg_cmd)
-
-    # #reading from audio mp3 file
-    # sound = AudioSegment.from_wav("extraction/{input_filename}_audio.wav".format(input_filename=input_filename), format="wav")
-    # # spliting audio files
-    # audio_chunks = split_on_silence(sound, min_silence_len=500, silence_thresh=-40, keep_silence=250 )
-    # #loop is used to iterate over the output list
-    # for i, chunk in enumerate(audio_chunks):
-    #     output_file = "extracted/audio_chunk{0}.wav".format(i)
-    #     print("Exporting file", output_file)
-    #     chunk.export(output_file, format="wav")
-
-    # transcribe_audio()
     # #shutil.rmtree("extraction")
