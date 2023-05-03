@@ -54,10 +54,10 @@ class LectureExtractor(object):
 
                     if difference > 5:
                         head, tail = os.path.split(filelist[ii])
-                        shutil.copyfile(filelist[ii], "extraction" + os.path.sep + tail)
+                        shutil.copyfile(filelist[ii], "deduplicated" + os.path.sep + tail)
                         count += 1
                 else:
-                    shutil.copyfile(filelist[ii], "extraction" + os.path.sep + tail)
+                    shutil.copyfile(filelist[ii], "deduplicated" + os.path.sep + tail)
                     count += 1
             
             progress_bar.close()
