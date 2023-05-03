@@ -43,7 +43,9 @@ class LectureExtractor(object):
         filelist = glob.glob(os.path.join("extraction", '*.png'))
         filelist.sort()
         count = 0
-        for ii in tqdm(range(0, len(filelist))):
+        progress_bar = tqdm(range(0, len(filelist)))
+        progress_bar.set_description("Finding Slides:")
+        for ii in progress_bar:
             if ii < len(filelist)-1:
                 image1 = Image.open(filelist[ii])
                 image2 = Image.open(filelist[ii+1])
@@ -56,6 +58,8 @@ class LectureExtractor(object):
             else:
                 shutil.copyfile(filelist[ii], location + os.path.sep + tail)
                 count += 1
+        
+        del(progress_bar)
         shutil.rmtree("extraction")
 
         return count
