@@ -7,10 +7,7 @@ import os
 import glob
 import subprocess
 import shutil
-import functools
 import imagehash
-import numpy as np
-import ffmpeg
 
 
 class LectureExtractor(object):
@@ -32,11 +29,7 @@ class LectureExtractor(object):
         self.threshold = 5
 
 
-    def compare(self, image1=None, image2=None, similarity=80):
-        threshold = 1 - similarity/100
-        hash_size = 8
-        diff_limit = int(threshold*(hash_size**2))
-
+    def compare(self, image1=None, image2=None):
         hash1 = imagehash.average_hash(image1)
         hash2 = imagehash.average_hash(image2)
 
@@ -62,25 +55,27 @@ class LectureExtractor(object):
             else:
                 shutil.copyfile(filelist[ii], location + os.path.sep + tail)
                 count += 1
+        shutil.rmtree("extraction")
 
         return count
 
 
     def main(self):
-        # TODO: Do not rely on dirs existing to determine whether to do something. Eventually implement in argparse
-        if not os.path.exists("extracted"):
-            os.mkdir("extracted")
+        if not os.path.exists("extraction"):
+            os.mkdir("extraction")
+            ffmpeg_cmd = ["ffmpeg",
+                        "-v", "quiet", "-stats",
+                        "-i", self.input_filename,
+                        "-vf", "fps={sampling_rate}".format(sampling_rate=self.sampling_rate),
+                        "extraction/{input_filename}_%010d.png".format(input_filename=self.input_filename)]
+            subprocess.call(ffmpeg_cmd)
+            
+        if not os.path.exists("deduplicated"):
+            os.mkdir("deduplicated")
+            location = "deduplicated"
+            number_of_slides = self.deduplicate(location=location, threshold=self.threshold)
 
-            filename="sample.wmv"
-            probe = ffmpeg.probe(filename)
-            duration_exact = float(probe['streams'][0]['duration'])
-            duration_whole_second = int(duration_exact)
-
-            for i in range(0, duration_whole_second):
-                output_filename = "extracted/{filename}_{index}.png".format(filename=filename, index=i)
-                ffmpeg.input(filename, ss=i).output(output_filename, vframes=1, loglevel="quiet").run()
-
-        #shutil.rmtree("extraction")
+            print("Found {number_of_slides} slide(s)".format(number_of_slides=number_of_slides))
 
 
 if __name__ == '__main__':
