@@ -63,12 +63,12 @@ class LectureExtractor(object):
     def main(self):
         if not os.path.exists("extraction"):
             os.mkdir("extraction")
-            # ffmpeg_cmd = ["ffmpeg",
-            #             "-v", "quiet", "-stats",
-            #             "-i", self.input_filename,
-            #             "-vf", "fps={sampling_rate}".format(sampling_rate=self.sampling_rate),
-            #             "extraction/{input_filename}_%010d.png".format(input_filename=self.input_filename)]
-            # subprocess.call(ffmpeg_cmd)
+            ffmpeg_cmd = ["ffmpeg",
+                        "-v", "quiet", "-stats",
+                        "-i", self.input_filename,
+                        "-vf", "fps={sampling_rate}".format(sampling_rate=self.sampling_rate),
+                        "extraction/{input_filename}_%010d.png".format(input_filename=self.input_filename)]
+            subprocess.call(ffmpeg_cmd)
             
         if not os.path.exists("deduplicated"):
             os.mkdir("deduplicated")
