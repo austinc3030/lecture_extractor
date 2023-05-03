@@ -101,6 +101,8 @@ class LectureExtractor(object):
 
 
     def main(self):
+        if not os.path.exists(self.temp_dir):
+            os.mkdir(self.temp_dir)
         self.extract_frames()
         self.deduplicate_frames()
 
