@@ -8,7 +8,6 @@ import glob
 import subprocess
 import shutil
 import imagehash
-import ffmpeg
 
 
 class LectureExtractor(object):
@@ -64,11 +63,6 @@ class LectureExtractor(object):
     def main(self):
         if not os.path.exists("extraction"):
             os.mkdir("extraction")
-            stream = ffmpeg.input(self.input_filename)
-            stream = ffmpeg.filter(stream, '-v', "quiet", "-stats")
-            stream = ffmpeg.filter(stream, 'fps', fps=1)
-            stream = ffmpeg.output(stream, "extraction/{}_%010d.png".format(self.input_filename))
-            ffmpeg.run(stream)
             # ffmpeg_cmd = ["ffmpeg",
             #             "-v", "quiet", "-stats",
             #             "-i", self.input_filename,
