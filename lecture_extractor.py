@@ -65,6 +65,7 @@ class LectureExtractor(object):
         if not os.path.exists("extraction"):
             os.mkdir("extraction")
             stream = ffmpeg.input(self.input_filename)
+            stream = ffmpeg.filter(stream, '-v', "quiet", "-stats")
             stream = ffmpeg.filter(stream, 'fps', fps=1)
             stream = ffmpeg.output(stream, "extraction/{}_%010d.png".format(self.input_filename))
             ffmpeg.run(stream)
