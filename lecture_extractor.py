@@ -22,14 +22,35 @@ class LectureExtractor(object):
     THRESHOLD = 5
 
 
-    def __init__(self, input_filename, temp_dir, extract_dir, sampling_rate, dedup_dir, threshold):
-        
+    def __init__(self, input_filename=None, temp_dir=None, extract_dir=None, sampling_rate=None,
+                 dedup_dir=None, threshold=None):
+
+        # Set defaults
         self.input_filename = self.INPUT_FILENAME
         self.temp_dir = self.TEMP_DIR
         self.extract_dir = self.EXTRACT_DIR
         self.sampling_rate = self.SAMPLING_RATE
         self.dedup_dir = self.DEDUP_DIR
         self.threshold = self.THRESHOLD
+
+        if input_filename is not None:
+            self.input_filename = input_filename
+
+        if temp_dir is not None:
+            self.temp_dir = temp_dir
+
+        if extract_dir is not None:
+            self.extract_dir = extract_dir
+
+        if sampling_rate is not None:
+            self.sampling_rate = sampling_rate
+    
+        if dedup_dir is not None:
+            self.dedup_dir = dedup_dir
+
+        if threshold is not None:
+            self.threshold = threshold
+            
 
 
     def deduplicate_frames(self, threshold=5):
