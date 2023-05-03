@@ -8,6 +8,7 @@ import glob
 import subprocess
 import shutil
 import imagehash
+from tqdm import tqdm
 
 
 class LectureExtractor(object):
@@ -42,7 +43,7 @@ class LectureExtractor(object):
         filelist = glob.glob(os.path.join("extraction", '*.png'))
         filelist.sort()
         count = 0
-        for ii in range(0, len(filelist)):
+        for ii in tqdm(range(0, len(filelist))):
             if ii < len(filelist)-1:
                 image1 = Image.open(filelist[ii])
                 image2 = Image.open(filelist[ii+1])
