@@ -54,8 +54,6 @@ class LectureExtractor(object):
 
 
     def deduplicate_frames(self, threshold=5):
-        if not os.path.exists(self.dedup_dir):
-            os.mkdir(self.dedup_dir)
             filelist = glob.glob(os.path.join(self.extract_dir, '*.png'))
             filelist.sort()
             count = 0
@@ -88,21 +86,33 @@ class LectureExtractor(object):
             print("Found {number_of_slides} slide(s)".format(number_of_slides=count))
 
 
-    def extract_frames(self):
-        if not os.path.exists(self.extract_dir):
-            os.mkdir(self.extract_dir)
-            ffmpeg_cmd = ["ffmpeg",
-                        "-v", "quiet", "-stats",
-                        "-i", self.input_filename,
-                        "-vf", "fps={sampling_rate}".format(sampling_rate=self.sampling_rate),
-                        "{extract_dir}/{input_filename}_%010d.png".format(extract_dir=self.extract_dir,
-                                                                          input_filename=self.input_filename)]
-            subprocess.call(ffmpeg_cmd)
+    def extract_frames(self):        
+        ffmpeg_cmd = ["ffmpeg",
+                    "-v", "quiet", "-stats",
+                    "-i", self.input_filename,
+                    "-vf", "fps={sampling_rate}".format(sampling_rate=self.sampling_rate),
+                    "{extract_dir}/{input_filename}_%010d.png".format(extract_dir=self.extract_dir,
+                                                                        input_filename=self.input_filename)]
+        subprocess.call(ffmpeg_cmd)
+
+
+    def make_dirs(self):
+        # Remove old dirs if they exist
+        if os.path.exists(self.extract_dir):
+            shutil.rmtree(self.extract_dir)
+        if os.path.exists(self.dedup_dir):
+            shutil.rmtree(self.dedup_dir)
+        if os.path.exists(self.temp_dir):
+            shutil.rmtree(self.temp_dir)    
+        
+        # Make new dirs
+        os.mkdir(self.temp_dir)
+        os.mkdir(self.extract_dir)
+        os.mkdir(self.dedup_dir)    
 
 
     def main(self):
-        if not os.path.exists(self.temp_dir):
-            os.mkdir(self.temp_dir)
+        self.make_dirs()
         self.extract_frames()
         self.deduplicate_frames()
 
