@@ -13,27 +13,29 @@ from tqdm import tqdm
 
 class LectureExtractor(object):
 
-    input_filename = "sample.wmv"
-    
-    # Number of frames per second to extract from video. Note: A high sample rate here likely isn't needed for a
-    # slide show
-    sampling_rate = 1
-    
-    # Threshold: The number of bits that are allowed to differ between image hashes for determining similarity.
-    # A value of 5 seem to be effective to prevent duplicate slides due to cursor movements. Can adjust as needed
-    threshold = 5
+    # DEFAULTS
+    INPUT_FILENAME = "sample.wmv"
+    TEMP_DIR = "./temp"
+    EXTRACT_DIR = TEMP_DIR + "extract"
+    SAMPLING_RATE = 1
+    DEDUP_DIR = TEMP_DIR + "dedup"
+    THRESHOLD = 5
 
 
-    def __init__(self):
-        self.input_filename = "sample.wmv"
-        self.sampling_rate = 1
-        self.threshold = 5
+    def __init__(self, input_filename, temp_dir, extract_dir, sampling_rate, dedup_dir, threshold):
+        
+        self.input_filename = self.INPUT_FILENAME
+        self.temp_dir = self.TEMP_DIR
+        self.extract_dir = self.EXTRACT_DIR
+        self.sampling_rate = self.SAMPLING_RATE
+        self.dedup_dir = self.DEDUP_DIR
+        self.threshold = self.THRESHOLD
 
 
     def deduplicate_frames(self, threshold=5):
-        if not os.path.exists("deduplicated"):
-            os.mkdir("deduplicated")
-            filelist = glob.glob(os.path.join("extraction", '*.png'))
+        if not os.path.exists(self.dedup_dir):
+            os.mkdir(self.dedup_dir)
+            filelist = glob.glob(os.path.join(self.extract_dir, '*.png'))
             filelist.sort()
             count = 0
             progress_bar = tqdm(range(0, len(filelist)))
@@ -54,26 +56,26 @@ class LectureExtractor(object):
 
                     if difference > 5:
                         head, tail = os.path.split(filelist[ii])
-                        shutil.copyfile(filelist[ii], "deduplicated" + os.path.sep + tail)
+                        shutil.copyfile(filelist[ii], self.dedup_dir + os.path.sep + tail)
                         count += 1
                 else:
-                    shutil.copyfile(filelist[ii], "deduplicated" + os.path.sep + tail)
+                    shutil.copyfile(filelist[ii], self.dedup_dir + os.path.sep + tail)
                     count += 1
             
             progress_bar.close()
-            shutil.rmtree("extraction")
         
             print("Found {number_of_slides} slide(s)".format(number_of_slides=count))
 
 
     def extract_frames(self):
-        if not os.path.exists("extraction"):
-            os.mkdir("extraction")
+        if not os.path.exists(self.extract_dir):
+            os.mkdir(self.extract_dir)
             ffmpeg_cmd = ["ffmpeg",
                         "-v", "quiet", "-stats",
                         "-i", self.input_filename,
                         "-vf", "fps={sampling_rate}".format(sampling_rate=self.sampling_rate),
-                        "extraction/{input_filename}_%010d.png".format(input_filename=self.input_filename)]
+                        "{extract_dir}/{input_filename}_%010d.png".format(extract_dir=self.extract_dir,
+                                                                          input_filename=self.input_filename)]
             subprocess.call(ffmpeg_cmd)
 
 
