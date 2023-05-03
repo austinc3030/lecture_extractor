@@ -15,7 +15,7 @@ class LectureExtractor(object):
 
     # DEFAULTS
     INPUT_FILENAME = "sample.wmv"
-    TEMP_DIR = "./temp"
+    TEMP_DIR = "./temp/"
     EXTRACT_DIR = TEMP_DIR + "extract"
     SAMPLING_RATE = 1
     DEDUP_DIR = TEMP_DIR + "dedup"
